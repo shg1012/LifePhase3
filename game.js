@@ -155,8 +155,7 @@ export function initGame(root) {
         <div class="quest-conversation"><span class="quest-itinerary-label">Something to talk about</span><p>${activity.starter}</p></div>
         <div class="quest-actions">
           <button class="quest-button quest-primary" type="button" data-action="schedule">Find a day for this <span aria-hidden="true">↗</span></button>
-          <button class="quest-button quest-back" type="button" data-action="back">Change a choice</button>
-          <button class="quest-button quest-primary quest-replay" type="button" data-action="replay">Plan another escape <span aria-hidden="true">↻</span></button>
+          <button class="quest-button quest-back" type="button" data-action="back"><span aria-hidden="true">←</span> Back</button>
         </div>`;
       status.textContent = 'Your afternoon plan is ready.';
     }
@@ -177,11 +176,6 @@ export function initGame(root) {
       step = 0;
     } else if (button.dataset.action === 'back') {
       step = Math.max(-1, step - 1);
-    } else if (button.dataset.action === 'replay') {
-      answers = [];
-      step = 0;
-      bookingStage = '';
-      booking = {date: '', time: '', duration: '60', location: '', timeZone: 'Asia/Kolkata'};
     } else {
       return;
     }
