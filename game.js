@@ -86,9 +86,8 @@ export function initGame(root) {
           <div><dt>Your guest</dt><dd>Shubham · shg1012@gmail.com</dd></div>
         </dl>
         <p class="quest-calendar-note">Google Calendar opens a draft in your account. Check that <strong>shg1012@gmail.com</strong> is listed as a guest, then click <strong>Save</strong> and choose to send the invitation.</p>
-        <p class="quest-calendar-note">It goes into your calendar; Shubham receives an invitation. The plan is confirmed when he accepts.</p>
         <div class="quest-actions"><a class="quest-button quest-primary" id="quest-calendar-link" target="_blank" rel="noopener noreferrer">Continue to Google Calendar <span aria-hidden="true">↗</span></a><button class="quest-button quest-back" type="button" data-action="edit-date">Edit details</button></div>
-        <p class="quest-calendar-footnote">Opens in a new tab. Nothing is sent from this website, and we can’t check whether you save the draft.</p>`;
+`;
       screen.querySelector('#quest-calendar-link').href = draft.url;
       const dateFormat = new Intl.DateTimeFormat('en-IN', {timeZone: booking.timeZone, dateStyle: 'medium'});
       const timeFormat = new Intl.DateTimeFormat('en-IN', {timeZone: booking.timeZone, hour: 'numeric', minute: '2-digit', timeZoneName: 'shortOffset'});
