@@ -56,7 +56,6 @@ export function initGame(root) {
   let answers = [];
   let bookingStage = '';
   let booking = {date: '', time: '', duration: '60', location: '', timeZone: 'Asia/Kolkata'};
-  let draft;
 
   root.innerHTML = '<div class="quest-screen"></div><p class="quest-status" role="status" aria-live="polite" aria-atomic="true"></p>';
   const screen = root.querySelector('.quest-screen');
@@ -75,25 +74,6 @@ export function initGame(root) {
   }
 
   function renderBooking() {
-    if (bookingStage === 'review') {
-      screen.innerHTML = `
-        <span class="quest-eyebrow">A date for the plot</span>
-        <h3 class="quest-heading" tabindex="-1">One last look.</h3>
-        <dl class="quest-review">
-          <div><dt>The adventure</dt><dd>${escapeHTML(itinerary().title)}</dd></div>
-          <div><dt>When</dt><dd id="quest-review-time"></dd></div>
-          <div><dt>Where</dt><dd>${escapeHTML(booking.location.trim() || 'To be agreed together')}</dd></div>
-          <div><dt>Your guest</dt><dd>Shubham · shg1012@gmail.com</dd></div>
-        </dl>
-        <p class="quest-calendar-note">Google Calendar opens a draft in your account. Check that <strong>shg1012@gmail.com</strong> is listed as a guest, then click <strong>Save</strong> and choose to send the invitation.</p>
-        <div class="quest-actions"><a class="quest-button quest-primary" id="quest-calendar-link" target="_blank" rel="noopener noreferrer">Continue to Google Calendar <span aria-hidden="true">↗</span></a><button class="quest-button quest-back" type="button" data-action="edit-date">Edit details</button></div>
-`;
-      screen.querySelector('#quest-calendar-link').href = draft.url;
-      const dateFormat = new Intl.DateTimeFormat('en-IN', {timeZone: booking.timeZone, dateStyle: 'medium'});
-      const timeFormat = new Intl.DateTimeFormat('en-IN', {timeZone: booking.timeZone, hour: 'numeric', minute: '2-digit', timeZoneName: 'shortOffset'});
-      screen.querySelector('#quest-review-time').textContent = `${dateFormat.format(draft.start)}, ${timeFormat.format(draft.start)} → ${dateFormat.format(draft.end)}, ${timeFormat.format(draft.end)} (${booking.timeZone})`;
-      return;
-    }
     screen.innerHTML = `
       <span class="quest-eyebrow">Let’s give this a date</span>
       <h3 class="quest-heading" tabindex="-1">When’s our little escape?</h3>
@@ -109,7 +89,7 @@ export function initGame(root) {
         <label for="quest-location">Meeting place <span>(optional)</span><input id="quest-location" name="location" type="text" maxlength="200" value="${escapeHTML(booking.location)}" placeholder="A café, park, or somewhere worth a detour"></label>
         <p class="quest-calendar-note">This proposes a time; Shubham’s availability still needs confirming.</p>
         <p id="quest-date-error" class="quest-date-error" role="alert"></p>
-        <div class="quest-actions"><button class="quest-button quest-primary" type="submit">Review our plan <span aria-hidden="true">↗</span></button><button class="quest-button quest-back" type="button" data-action="back-to-plan">Back to the adventure</button></div>
+        <div class="quest-actions"><button class="quest-button quest-primary" type="submit">Continue to Google Calendar <span aria-hidden="true">↗</span></button><button class="quest-button quest-back" type="button" data-action="back-to-plan">Back to the adventure</button></div>
       </form>`;
     screen.querySelector('#quest-duration').value = booking.duration;
   }
@@ -166,7 +146,7 @@ export function initGame(root) {
   function onClick(event) {
     const button = event.target.closest('button');
     if (!button || !root.contains(button)) return;
-    if (button.dataset.action === 'schedule' || button.dataset.action === 'edit-date') {
+    if (button.dataset.action === 'schedule') {
       bookingStage = 'date';
     } else if (button.dataset.action === 'back-to-plan') {
       bookingStage = '';
@@ -200,9 +180,8 @@ export function initGame(root) {
     event.preventDefault();
     try {
       booking = {...Object.fromEntries(new FormData(event.target)), timeZone: 'Asia/Kolkata'};
-      draft = buildCalendarDraft({...booking, ...itinerary()});
-      bookingStage = 'review';
-      render();
+      const draft = buildCalendarDraft({...booking, ...itinerary()});
+      window.location.assign(draft.url);
     } catch (error) {
       screen.querySelector('#quest-date-error').textContent = error.message;
     }

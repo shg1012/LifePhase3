@@ -1,4 +1,4 @@
-import { initGame } from './game.js?v=calendar-copy-2';
+import { initGame } from './game.js?v=direct-calendar-1';
 import { galleryPhotos } from './photo-data.js';
 
 initGame(document.querySelector('#side-quest-game'));
