@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 560">
+ <defs><pattern id="grain" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="4" r=".5" fill="#15493f" opacity=".06"/></pattern></defs>
+ <rect width="560" height="560" fill="#eedec5"/><circle cx="383" cy="153" r="73" fill="#d78052"/>
+ <path d="M0 262 102 166 175 240 274 106 389 256 464 185 560 269v291H0z" fill="#acb2a0"/>
+ <path d="m155 240 119-134 94 123-83-69-28 49-30-10z" fill="#f1e9d6"/><path d="M0 354q131-159 279-91t281-1v298H0z" fill="#5c826b"/>
+ <path d="M0 436q170-129 284-56t276-55v235H0z" fill="#204f44"/>
+ <path d="M225 560c-154-111 156-101 126-168-26-56-169-31-129-78 13-16 37-18 58-26" stroke="#ece2c9" stroke-width="38" fill="none"/>
+ <path d="M225 560c-154-111 156-101 126-168-26-56-169-31-129-78 13-16 37-18 58-26" stroke="#a0987c" stroke-width="1.5" stroke-dasharray="9 12" fill="none"/>
+ <g fill="#184b40"><path d="m53 367 20-70 20 70zm23 14 16-57 17 57zm377-22 22-77 22 77z"/><path d="M469 340h11v42h-11zM70 352h7v36h-7z"/></g>
+ <g transform="translate(296 448) rotate(-17)"><ellipse cy="22" rx="38" ry="9" fill="#123a32" opacity=".22"/><path d="m-34 4 7-23q1-5 10-5h29q9 0 13 8l8 20v20h-68z" fill="#dfa46d"/><path d="m-20-17-5 17h49l-10-17z" fill="#295b50"/><rect x="-35" y="2" width="70" height="22" rx="5" fill="#edb878"/><rect x="-28" y="9" width="12" height="6" rx="2" fill="#fcf1d3"/><rect x="16" y="9" width="12" height="6" rx="2" fill="#fcf1d3"/><rect x="-30" y="23" width="11" height="10" rx="3" fill="#20382e"/><rect x="19" y="23" width="11" height="10" rx="3" fill="#20382e"/><path d="M-7-15V-2" stroke="#edb878" stroke-width="3"/></g>
+ <path d="m80 85 8 6 8-6m11 17 6 5 6-5" fill="none" stroke="#5e6e5f" stroke-width="2"/><rect width="560" height="560" fill="url(#grain)"/>
+</svg>
