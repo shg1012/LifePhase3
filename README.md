@@ -14,19 +14,19 @@ python3 -m http.server 4174 --bind 127.0.0.1
 
 Then visit http://127.0.0.1:4174. JavaScript modules need HTTP, so use the local server rather than opening index.html directly from Finder.
 
-## Make it personal
+## Content and publishing
 
-The **Edit preview** button opens a panel to preview up to eight extra photos or videos, write captions, and edit non-negotiables. Files are previewed on your device; nothing is uploaded. These extra preview edits last for the current browser session and reset on reload. The 21 saved photos persist after reload. This panel is a preview convenience, not a publishing system.
+The live website is https://shg1012.github.io/LifePhase3/. GitHub Pages publishes updates pushed to the repository.
 
-The gallery contains all 21 supplied photos, saved permanently in the website. Eight appear initially; View all photos expands the complete set. Every photo is also reachable in the larger viewer using arrow buttons or keyboard arrows. WebP images and smaller thumbnails keep loading light. The three initial non-negotiables are suggested draft wording requested by Shubham, not verified personal requirements. They can be edited or removed; leaving the field empty hides that section.
+The gallery contains all 21 supplied photos. Eight appear initially; View all photos expands the complete set. Every photo is reachable in the larger viewer using arrow buttons or keyboard arrows. WebP images and smaller thumbnails keep loading light.
 
-To keep permanent changes, edit the content in `index.html`, photo captions and ordering in `photo-data.js`, and the corresponding defaults in `script.js`, and place chosen media in `assets/`. When publishing, remove the editing controls if desired. This site has only been served locally; it has not been deployed publicly.
+The three non-negotiables are suggested draft wording requested by Shubham. Edit that section directly in `index.html` when the wording is ready. Edit photo captions and ordering in `photo-data.js` and place new photos in `assets/`. The website has no visitor editing or file upload feature.
 
 ## Files
 
 - `index.html`: page content and accessible dialogs.
 - `styles.css`: responsive layout, illustrations’ presentation, and motion controls.
-- `script.js`: gallery, contact controls, local preview editor, and motion preferences.
+- `script.js`: gallery, contact controls, and motion preferences.
 - `game.js`: the self-contained three-question side quest.
 - `photo-data.js`: saved gallery photos, ordering, captions, alternative text, and thumbnail focal points.
 - `assets/`: local WebP photos and thumbnails, original SVG artwork, and favicon; no external image or font service.
@@ -35,7 +35,7 @@ The game stores no answers and makes no compatibility predictions. The page cont
 
 ## Accessibility and motion
 
-Uses native buttons and modal dialogs, visible focus indicators, a skip link, keyboard-operable gallery controls, and reduced-motion support. Motion can also be paused from the footer. Uploaded videos do not autoplay; they use native playback controls. If publishing videos with speech, add captions or a transcript.
+Uses native buttons and modal dialogs, visible focus indicators, a skip link, keyboard-operable gallery controls, and reduced-motion support. Motion can also be paused from the footer.
 
 ## Photo asset preparation
 
@@ -43,4 +43,4 @@ All 21 source files were converted successfully. The source files were left unto
 
 Original files totaled 34,441,835 bytes. Full viewer images total 7,265,020 bytes, and thumbnails total 1,197,674 bytes: 8,462,694 bytes combined, a 75.43% reduction. Outputs are in `assets/photos/`.
 
-Gallery checks passed for all 21 full images, next/previous navigation, keyboard focus restoration, expansion/collapse, reload and reset persistence, and 390px/320px layouts.
+Gallery checks passed for all 21 full images, next/previous navigation, keyboard focus restoration, expansion/collapse, reload persistence, and 390px/320px layouts.
