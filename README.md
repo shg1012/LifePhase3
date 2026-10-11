@@ -28,10 +28,19 @@ The three non-negotiables are suggested draft wording requested by Shubham. Edit
 - `styles.css`: responsive layout, illustrations’ presentation, and motion controls.
 - `script.js`: gallery, contact controls, and motion preferences.
 - `game.js`: the self-contained three-question side quest.
+- `calendar.js`: Google Calendar draft links, date validation, and timezone conversion.
 - `photo-data.js`: saved gallery photos, ordering, captions, alternative text, and thumbnail focal points.
 - `assets/`: local WebP photos and thumbnails, original SVG artwork, and favicon; no external image or font service.
 
 The game stores no answers and makes no compatibility predictions. The page contains no trackers, analytics, external libraries, or automatic messages. The contact dialog exposes only Shubham’s supplied number; relatives’ numbers, exact birth time, and salary are absent.
+
+## Calendar invitations
+
+After completing the game, a visitor can select a date, start time, duration, and optional meeting place, then review the event. India Standard Time is the default; visitors in another timezone can choose their detected local timezone. Past dates and ambiguous or missing times during daylight-saving changes are rejected.
+
+Continue to Google Calendar opens a prepared event draft, with `shg1012@gmail.com` prefilled as a guest. The visitor is the organizer and must use their own Google account, check the guest address, save the event, and choose to send invitations. This website does not create events or send mail itself and cannot confirm that a visitor saved the draft. Shubham may need to respond before the event appears in his calendar, depending on his invitation settings. Availability is not checked.
+
+Uses Google Calendar's `render?action=TEMPLATE` link with `text`, `dates`, `ctz`, `location`, `details`, and `add` parameters. No OAuth client, API key, calendar permission, or backend is used. The date range is serialized as UTC instants; the selected timezone is included separately. Google may change its draft-link behavior, so guest prefilling should be checked on the Calendar screen.
 
 ## Accessibility and motion
 
