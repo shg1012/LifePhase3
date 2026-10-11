@@ -35,10 +35,11 @@ export function calendarStart(date, time, timeZone) {
   return matches[0];
 }
 
-export function buildCalendarDraft({date, time, timeZone, duration, location, title, plan, soundtrack, route, starter}, now = new Date()) {
+export function buildCalendarDraft({date, time, duration, location, title, plan, soundtrack, route, starter}, now = new Date()) {
+  const timeZone = 'Asia/Kolkata';
   const start = calendarStart(date, time, timeZone);
   if (start <= now) throw new Error('That moment has already passed. Pick a future date and time.');
-  if (![60, 90, 120, 180].includes(Number(duration))) throw new Error('Choose how long we should make room for.');
+  if (![60, 120, 180, 240, 300, 360].includes(Number(duration))) throw new Error('Choose how long we should make room for.');
   const end = new Date(start.getTime() + Number(duration) * 60000);
   const stamp = value => value.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   const url = new URL('https://calendar.google.com/calendar/render');

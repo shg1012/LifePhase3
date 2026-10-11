@@ -1,4 +1,4 @@
-import { buildCalendarDraft, todayInZone } from './calendar.js';
+import { buildCalendarDraft, todayInZone } from './calendar.js?v=ist-slider-1';
 
 const questions = [
   {
@@ -57,7 +57,6 @@ export function initGame(root) {
   let bookingStage = '';
   let booking = {date: '', time: '', duration: '60', location: '', timeZone: 'Asia/Kolkata'};
   let draft;
-  const browserZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   root.innerHTML = '<div class="quest-screen"></div><p class="quest-status" role="status" aria-live="polite" aria-atomic="true"></p>';
   const screen = root.querySelector('.quest-screen');
@@ -102,14 +101,17 @@ export function initGame(root) {
       <p class="quest-description">Good company deserves a spot on the calendar.</p>
       <form id="quest-date-form" class="quest-date-form">
         <div class="quest-fields"><label for="quest-date">Date<input id="quest-date" name="date" type="date" required min="${todayInZone(booking.timeZone)}" value="${escapeHTML(booking.date)}"></label><label for="quest-time">Start time<input id="quest-time" name="time" type="time" required value="${escapeHTML(booking.time)}"></label></div>
-        <label for="quest-zone">Time zone<select id="quest-zone" name="timeZone"><option value="Asia/Kolkata">India Standard Time (UTC+05:30)</option>${browserZone !== 'Asia/Kolkata' ? `<option value="${escapeHTML(browserZone)}">Your time zone (${escapeHTML(browserZone)})</option>` : ''}</select></label>
-        <label for="quest-duration">Make room for<select id="quest-duration" name="duration"><option value="60">1 hour</option><option value="90">1½ hours</option><option value="120">2 hours</option><option value="180">3 hours</option></select></label>
+        <p class="quest-time-hint">All times in India · IST (UTC+05:30)</p>
+        <div class="quest-duration-field">
+          <div class="quest-duration-heading"><label for="quest-duration">Make room for</label><output id="quest-duration-value" for="quest-duration">${Number(booking.duration) / 60} ${Number(booking.duration) === 60 ? 'hour' : 'hours'}</output></div>
+          <input id="quest-duration" name="duration" type="range" min="60" max="360" step="60" value="${escapeHTML(booking.duration)}" aria-valuetext="${Number(booking.duration) / 60} ${Number(booking.duration) === 60 ? 'hour' : 'hours'}">
+          <div class="quest-duration-stops" aria-hidden="true"><span>1 hr</span><span>2 hr</span><span>3 hr</span><span>4 hr</span><span>5 hr</span><span>6 hr</span></div>
+        </div>
         <label for="quest-location">Meeting place <span>(optional)</span><input id="quest-location" name="location" type="text" maxlength="200" value="${escapeHTML(booking.location)}" placeholder="A café, park, or somewhere worth a detour"></label>
         <p class="quest-calendar-note">This proposes a time; Shubham’s availability still needs confirming.</p>
         <p id="quest-date-error" class="quest-date-error" role="alert"></p>
         <div class="quest-actions"><button class="quest-button quest-primary" type="submit">Review our plan <span aria-hidden="true">↗</span></button><button class="quest-button quest-back" type="button" data-action="back-to-plan">Back to the adventure</button></div>
       </form>`;
-    screen.querySelector('#quest-zone').value = booking.timeZone;
     screen.querySelector('#quest-duration').value = booking.duration;
   }
 
@@ -186,14 +188,19 @@ export function initGame(root) {
     if (!event.target.closest('#quest-date-form') || !event.target.name) return;
     booking[event.target.name] = event.target.value;
     screen.querySelector('#quest-date-error').textContent = '';
-    if (event.target.name === 'timeZone') screen.querySelector('#quest-date').min = todayInZone(booking.timeZone);
+    if (event.target.name === 'duration') {
+      const hours = Number(event.target.value) / 60;
+      const label = `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+      screen.querySelector('#quest-duration-value').value = label;
+      event.target.setAttribute('aria-valuetext', label);
+    }
   }
 
   function onSubmit(event) {
     if (event.target.id !== 'quest-date-form') return;
     event.preventDefault();
     try {
-      booking = Object.fromEntries(new FormData(event.target));
+      booking = {...Object.fromEntries(new FormData(event.target)), timeZone: 'Asia/Kolkata'};
       draft = buildCalendarDraft({...booking, ...itinerary()});
       bookingStage = 'review';
       render();

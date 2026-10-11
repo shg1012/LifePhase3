@@ -1,4 +1,4 @@
-import { initGame } from './game.js';
+import { initGame } from './game.js?v=ist-slider-1';
 import { galleryPhotos } from './photo-data.js';
 
 initGame(document.querySelector('#side-quest-game'));
