@@ -156,7 +156,7 @@ export function initGame(root) {
         <div class="quest-actions">
           <button class="quest-button quest-primary" type="button" data-action="schedule">Find a day for this <span aria-hidden="true">↗</span></button>
           <button class="quest-button quest-back" type="button" data-action="back">Change a choice</button>
-          <button class="quest-button quest-back" type="button" data-action="replay">Plan another escape ↻</button>
+          <button class="quest-button quest-primary quest-replay" type="button" data-action="replay">Plan another escape <span aria-hidden="true">↻</span></button>
         </div>`;
       status.textContent = 'Your afternoon plan is ready.';
     }
