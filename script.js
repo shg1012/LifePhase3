@@ -1,74 +1,24 @@
-import { initGame } from './game.js?v=direct-calendar-1';
 import { galleryPhotos } from './photo-data.js';
 
-initGame(document.querySelector('#side-quest-game'));
-
 const galleryItems = galleryPhotos;
-const collapsedPhotoCount = 8;
+const collapsedPhotoCount = 6;
 let galleryExpanded = false;
 let currentIndex = 0;
+let lastPhotoLink;
 const gallery = document.querySelector('#gallery-grid');
 const lightbox = document.querySelector('#lightbox');
-const contact = document.querySelector('#contact-dialog');
-const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-let paused = motionPreference.matches;
-let motionOverridden = false;
-
-const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('is-visible');
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.08 }) : null;
-if (observer) {
-  if (!paused) document.documentElement.classList.add('js-motion');
-  document.querySelectorAll('.reveal').forEach(element => observer.observe(element));
-}
-function updateMotion() {
-  document.documentElement.classList.toggle('motion-paused', paused);
-  const control = document.querySelector('#motion-toggle');
-  control.textContent = paused ? 'Motion paused' : 'Pause motion';
-  control.setAttribute('aria-pressed', String(paused));
-}
-document.querySelector('#motion-toggle').addEventListener('click', () => {
-  if (motionPreference.matches && paused) {
-    document.querySelector('#motion-toggle').textContent = 'Reduced motion is on';
-    return;
-  }
-  paused = !paused;
-  motionOverridden = true;
-  updateMotion();
-});
-motionPreference.addEventListener('change', event => {
-  if (event.matches || !motionOverridden) paused = event.matches;
-  updateMotion();
-});
-updateMotion();
-
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 function openDialog(dialog) {
+  lastPhotoLink = document.activeElement;
   dialog.showModal();
 }
-document.querySelectorAll('dialog').forEach(dialog => {
-  dialog.querySelector('[data-close]').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('click', event => {
-    if (event.target !== dialog) return;
-    const box = dialog.getBoundingClientRect();
-    if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) dialog.close();
-  });
+lightbox.querySelector('[data-close]').addEventListener('click', () => lightbox.close());
+lightbox.addEventListener('click', event => {
+  if (event.target !== lightbox) return;
+  const box = lightbox.getBoundingClientRect();
+  if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) lightbox.close();
 });
-document.querySelector('#contact-open').addEventListener('click', () => openDialog(contact));
-document.querySelector('#copy-number').addEventListener('click', async () => {
-  const status = document.querySelector('#copy-status');
-  try {
-    await navigator.clipboard.writeText('+91 7060 76 2001');
-    status.textContent = 'Number copied. The opening line is all yours.';
-  } catch {
-    status.textContent = 'Copying isn’t available here. You can select and copy the number above.';
-  }
-});
-contact.addEventListener('close', () => { document.querySelector('#copy-status').textContent = ''; });
+lightbox.addEventListener('close', () => lastPhotoLink?.focus({preventScroll: true}));
 
 function createMedia(item, inLightbox = false) {
   const image = document.createElement('img');
@@ -134,7 +84,7 @@ function renderGallery() {
     button.append(picture, meta);
     gallery.append(button);
   });
-  document.querySelector('#gallery-description').textContent = 'Big views, little moments, and the occasional leap of faith.';
+  document.querySelector('#gallery-description').textContent = 'Travel, everyday moments, and a camera that comes along.';
   updateGalleryControls();
 }
 
@@ -142,14 +92,47 @@ function updateGalleryControls() {
   const toggle = document.querySelector('#gallery-toggle');
   toggle.hidden = galleryItems.length <= collapsedPhotoCount;
   toggle.setAttribute('aria-expanded', String(galleryExpanded));
-  toggle.textContent = galleryExpanded ? 'Show fewer photos ↑' : `View all ${galleryItems.length} photos ↗`;
-  document.querySelector('#gallery-count').textContent = `${galleryExpanded ? galleryItems.length : Math.min(collapsedPhotoCount, galleryItems.length)} of ${galleryItems.length} little moments`;
+  toggle.textContent = galleryExpanded ? 'Show fewer photos ↑' : 'View more photos ↓';
+  document.querySelector('#gallery-count').textContent = `${galleryExpanded ? galleryItems.length : Math.min(collapsedPhotoCount, galleryItems.length)} of ${galleryItems.length} photos`;
 }
 document.querySelector('#gallery-toggle').addEventListener('click', () => {
   galleryExpanded = !galleryExpanded;
   [...gallery.children].forEach((card, index) => { card.hidden = !galleryExpanded && index >= collapsedPhotoCount; });
   updateGalleryControls();
   if (galleryExpanded) gallery.children[collapsedPhotoCount]?.focus({ preventScroll: true });
-  else document.querySelector('#gallery-toggle').scrollIntoView({ block: 'nearest', behavior: paused ? 'instant' : 'smooth' });
+  else document.querySelector('#gallery-toggle').scrollIntoView({ block: 'nearest', behavior: reducedMotion.matches ? 'instant' : 'smooth' });
 });
 renderGallery();
+
+// Load and play the muted film only while it is visible in the active tab.
+const travelVideo = document.querySelector('#travel-video');
+if (travelVideo) {
+  let videoInView = false;
+  travelVideo.muted = true;
+  function updateVideoPlayback() {
+    const shouldPlay = videoInView && !document.hidden && !reducedMotion.matches;
+    if (!shouldPlay) {
+      travelVideo.pause();
+      return;
+    }
+    if (!travelVideo.getAttribute('src')) {
+      travelVideo.src = travelVideo.dataset.src;
+    }
+    const playback = travelVideo.play();
+    playback?.then(() => {
+      if (!videoInView || document.hidden || reducedMotion.matches) travelVideo.pause();
+    }).catch(() => {
+      // Some browsers or power-saving modes may prevent autoplay.
+    });
+  }
+  if ('IntersectionObserver' in window) {
+    const videoObserver = new IntersectionObserver(entries => {
+      videoInView = entries[0].isIntersecting && entries[0].intersectionRatio >= 0.15;
+      updateVideoPlayback();
+    }, {threshold: [0, 0.15]});
+    videoObserver.observe(travelVideo);
+  }
+  document.addEventListener('visibilitychange', updateVideoPlayback);
+  reducedMotion.addEventListener('change', updateVideoPlayback);
+  window.addEventListener('pagehide', () => travelVideo.pause());
+}
